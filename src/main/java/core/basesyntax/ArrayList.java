@@ -1,6 +1,5 @@
 package core.basesyntax;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public class ArrayList<T> implements List<T> {
@@ -34,6 +33,12 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
+    private void validateIndex(int index) {
+        if (index >= size || index < 0) {
+            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
+        }
+    }
+
     public static int newLength(int oldLength, int minGrowth, int prefGrowth) {
         int prefLength = oldLength + Math.max(minGrowth, prefGrowth);
         if (0 < prefLength && prefLength <= SOFT_MAX_ARRAY_LENGTH) {
@@ -59,12 +64,18 @@ public class ArrayList<T> implements List<T> {
         return grow(size + 1);
     }
 
+    private Object[] copyOf(Object[] array, int capacity) {
+        Object[] newArray = new Object[capacity];
+        System.arraycopy(array, 0, newArray, 0, array.length);
+        return array = newArray;
+    }
+
     private Object[] grow(int minCapacity) {
         int oldCapacity = array.length;
         if (oldCapacity > 0 || array != EMPTY_ARRAY) {
             int newCapacity = newLength(oldCapacity, minCapacity - oldCapacity,
-                    oldCapacity >> 1);
-            return array = Arrays.copyOf(array, newCapacity);
+                    oldCapacity + (oldCapacity >> 1));
+            return array = copyOf(array, newCapacity);
         } else {
             return array = new Object[Math.max(DEFAULT_CAPACITY, minCapacity)];
         }
@@ -104,17 +115,13 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
-        }
+        validateIndex(index);
         return array(index);
     }
 
     @Override
     public void set(T value, int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
-        }
+        validateIndex(index);
         array[index] = value;
     }
 
@@ -128,9 +135,7 @@ public class ArrayList<T> implements List<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= size) {
-            throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
-        }
+        validateIndex(index);
         final Object[] es = array;
         @SuppressWarnings("unchecked") T oldValue = (T) es[index];
         fastRemove(es, index);

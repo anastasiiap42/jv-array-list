@@ -6,7 +6,7 @@ import java.util.NoSuchElementException;
 public class ArrayList<T> implements List<T> {
     private static final int DEFAULT_CAPACITY = 10;
     private static final Object[] EMPTY_ARRAY = {};
-    public static final int SOFT_MAX_ARRAY_LENGTH = Integer.MAX_VALUE - 8;
+    private static final int SOFT_MAX_ARRAY_LENGTH = Integer.MAX_VALUE - 8;
     private Object[] array;
     private int size;
 
@@ -16,8 +16,7 @@ public class ArrayList<T> implements List<T> {
         } else if (initialCapacity == 0) {
             this.array = EMPTY_ARRAY;
         } else {
-            throw new IllegalArgumentException("Illegal Capacity: "+
-                    initialCapacity);
+            throw new IllegalArgumentException("Illegal Capacity: " + initialCapacity);
         }
     }
 
@@ -26,16 +25,17 @@ public class ArrayList<T> implements List<T> {
     }
 
     private String outOfBoundsMsg(int index) {
-        return "Index: "+index+", Size: "+size;
+        return "Index: " + index + ", Size: " + size;
     }
 
     private void rangeCheckForAdd(int index) {
-        if (index > size || index < 0)
+        if (index > size || index < 0) {
             throw new ArrayListIndexOutOfBoundsException(outOfBoundsMsg(index));
+        }
     }
 
     public static int newLength(int oldLength, int minGrowth, int prefGrowth) {
-        int prefLength = oldLength + Math.max(minGrowth, prefGrowth); // might overflow
+        int prefLength = oldLength + Math.max(minGrowth, prefGrowth);
         if (0 < prefLength && prefLength <= SOFT_MAX_ARRAY_LENGTH) {
             return prefLength;
         } else {
@@ -45,7 +45,7 @@ public class ArrayList<T> implements List<T> {
 
     private static int hugeLength(int oldLength, int minGrowth) {
         int minLength = oldLength + minGrowth;
-        if (minLength < 0) { // overflow
+        if (minLength < 0) {
             throw new OutOfMemoryError(
                     "Required array length " + oldLength + " + " + minGrowth + " is too large");
         } else if (minLength <= SOFT_MAX_ARRAY_LENGTH) {
@@ -80,8 +80,9 @@ public class ArrayList<T> implements List<T> {
         rangeCheckForAdd(index);
         final int s;
         Object[] array;
-        if ((s = size) == (array = this.array).length)
+        if ((s = size) == (array = this.array).length) {
             array = grow();
+        }
         System.arraycopy(array, index,
                 array, index + 1,
                 s - index);
@@ -119,8 +120,9 @@ public class ArrayList<T> implements List<T> {
 
     private void fastRemove(Object[] es, int i) {
         final int newSize;
-        if ((newSize = size - 1) > i)
+        if ((newSize = size - 1) > i) {
             System.arraycopy(es, i + 1, es, i, newSize - i);
+        }
         es[size = newSize] = null;
     }
 
@@ -135,8 +137,6 @@ public class ArrayList<T> implements List<T> {
         return oldValue;
     }
 
-
-
     @Override
     public T remove(T element) {
         final Object[] es = array;
@@ -144,13 +144,17 @@ public class ArrayList<T> implements List<T> {
         int i = 0;
         found: {
             if (element == null) {
-                for (; i < size; i++)
-                    if (es[i] == null)
+                for (; i < size; i++) {
+                    if (es[i] == null) {
                         break found;
+                    }
+                }
             } else {
-                for (; i < size; i++)
-                    if (element.equals(es[i]))
+                for (; i < size; i++) {
+                    if (element.equals(es[i])) {
                         break found;
+                    }
+                }
             }
             throw new NoSuchElementException();
         }

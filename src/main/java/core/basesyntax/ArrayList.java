@@ -60,14 +60,14 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private Object[] grow() {
-        return grow(size + 1);
-    }
-
     private Object[] copyOf(Object[] array, int capacity) {
         Object[] newArray = new Object[capacity];
         System.arraycopy(array, 0, newArray, 0, array.length);
         return array = newArray;
+    }
+
+    private Object[] grow() {
+        return grow(size + 1);
     }
 
     private Object[] grow(int minCapacity) {
@@ -109,14 +109,14 @@ public class ArrayList<T> implements List<T> {
     }
 
     @SuppressWarnings("unchecked")
-    T array(int index) {
+    T getElement(int index) {
         return (T) array[index];
     }
 
     @Override
     public T get(int index) {
         validateIndex(index);
-        return array(index);
+        return getElement(index);
     }
 
     @Override
@@ -161,7 +161,7 @@ public class ArrayList<T> implements List<T> {
                     }
                 }
             }
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("Element not found: " + element);
         }
         return remove(i);
     }

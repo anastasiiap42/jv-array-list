@@ -100,11 +100,6 @@ public class ArrayList<T> implements List<T> {
         }
     }
 
-    private Object[] copyOf(Object[] array, int capacity) {
-        Object[] newArray = new Object[capacity];
-        System.arraycopy(array, 0, newArray, 0, array.length);
-        return array = newArray;
-    }
     private int index(T element) {
         int index = -1;
         for (int i = 0; i < size; i++) {

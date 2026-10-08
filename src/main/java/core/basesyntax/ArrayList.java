@@ -84,6 +84,7 @@ public class ArrayList<T> implements List<T> {
             throw new ArrayListIndexOutOfBoundsException("Invalid index, " + index);
         }
     }
+
     private void checkIfIndexFits(int index) {
         if (index < 0 || index >= size) {
             throw new ArrayListIndexOutOfBoundsException("There is no such index in the list, "
